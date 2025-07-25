@@ -1,0 +1,136 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "test@example.com",
+      "password": "123456"
+    },
+    {
+      "id": "1f33",
+      "email": "abdullah616@gmail.com",
+      "password": "654321"
+    },
+    {
+      "id": "9cdd",
+      "email": "abdullah@gmail.com",
+      "password": "54321"
+    },
+    {
+      "id": "a6b4",
+      "email": "abd@gmail.com",
+      "password": "4321"
+    },
+    {
+      "id": "7e16",
+      "email": "abdul@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "b59e",
+      "email": "Abdullah@gmail.com",
+      "password": "7654321"
+    },
+    {
+      "id": "39a1",
+      "email": "ab@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "78da",
+      "email": "abduli@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "87dc",
+      "email": "abdulii@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "5c49",
+      "email": "abdulli@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "c3cd",
+      "email": "abdullii@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "85a7",
+      "email": "abdulllii@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "a93a",
+      "email": "abduliii@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "049e",
+      "email": "abbduliiii@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "dff7",
+      "email": "ghjhj@gmail.com",
+      "password": "7654321"
+    },
+    {
+      "id": "d860",
+      "email": "asasdjhabs@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "964d",
+      "email": "abb@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "6dea",
+      "email": "abdl@gmail.com",
+      "password": "7654321"
+    }
+  ],
+  "players": [
+    {
+      "id": "f82a",
+      "name": "Abdullah",
+      "role": "Batsman",
+      "team": "Hawkers",
+      "battingStyle": "Right-Handed",
+      "bowlingStyle": "Fast",
+      "dob": "2025-07-11",
+      "stats": {
+        "matches": 0,
+        "runs": 0,
+        "wickets": 0,
+        "average": 0
+      }
+    },
+    {
+      "id": "aab0",
+      "name": "Ronaldo",
+      "role": "Bowler",
+      "team": "Hawkers",
+      "battingStyle": "Left-Handed",
+      "bowlingStyle": "Fast",
+      "dob": "2025-07-25",
+      "stats": {
+        "matches": 0,
+        "runs": 0,
+        "wickets": 0,
+        "average": 0
+      }
+    }
+  ],
+  "matches": [
+    {
+      "team1": "Hawkers",
+      "team2": "Lions",
+      "date": "2025-07-25",
+      "time": "15:31",
+      "venue": "Stadium",
+      "id": "4234"
+    }
+  ]
+}

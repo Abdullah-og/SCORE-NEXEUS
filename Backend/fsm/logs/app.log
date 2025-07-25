@@ -1,0 +1,119 @@
+[2025-07-18 12:36:10.008 | [31merror[39m | LOG: uncaughtException: argument handler must be a function
+TypeError: argument handler must be a function
+    at Route.<computed> [as post] (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:228:15)
+    at app.<computed> [as post] (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\express\lib\application.js:479:19)
+    at Object.<anonymous> (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:43:5)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) | server.js]
+[2025-07-18 12:36:26.002 | [31merror[39m | LOG: uncaughtException: argument handler must be a function
+TypeError: argument handler must be a function
+    at Route.<computed> [as post] (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:228:15)
+    at app.<computed> [as post] (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\express\lib\application.js:479:19)
+    at Object.<anonymous> (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:43:5)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) | server.js]
+[2025-07-18 15:01:03.579 | [31merror[39m | LOG: TypeError: Cannot read properties of undefined (reading 'key')
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:66:23
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:582:12)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:291:5)
+    at jsonParser (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\body-parser\lib\types\json.js:109:7) | server.js]
+[2025-07-18 15:08:46.252 | [32minfo[39m | LOG: Request Token key is missing! | server.js]
+[2025-07-18 15:22:01.875 | [32minfo[39m | LOG: Request Token key is missing! | server.js]
+[2025-07-18 15:22:28.686 | [32minfo[39m | LOG: Key: 123 State: "idle" NextEvents: GO_AUTH,GO_GAME_FORM,GO_CHECKOUT,GO_PROFILE,GO_DATA,GO_CUSTOMER,GO_SELLER | server.js]
+[2025-07-18 15:22:28.688 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:22:28.689 | [32minfo[39m | LOG: Front-End transition = undefined | server.js]
+[2025-07-18 15:25:50.823 | [32minfo[39m | LOG: Key: 123 State: "idle" NextEvents: GO_AUTH,GO_GAME_FORM,GO_CHECKOUT,GO_PROFILE,GO_DATA,GO_CUSTOMER,GO_SELLER | server.js]
+[2025-07-18 15:25:50.836 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:25:50.849 | [32minfo[39m | LOG: Front-End transition = GO_AUTH | server.js]
+[2025-07-18 15:25:50.943 | [32minfo[39m | LOG: Key: 123 State: "authFlow" NextEvents: LOGIN,SIGNUP,LOGOUT,GO_CUSTOMER,GO_SELLER | server.js]
+[2025-07-18 15:28:41.000 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:28:41.001 | [32minfo[39m | LOG: Front-End transition = GO_GAME_FORM | server.js]
+[2025-07-18 15:35:54.503 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:35:54.505 | [32minfo[39m | LOG: Front-End transition = LOGIN | server.js]
+[2025-07-18 15:35:54.516 | [32minfo[39m | LOG: Key: 123 State: "authenticating" NextEvents: done.invoke.superApp.authenticating:invocation[0],error.platform.superApp.authenticating:invocation[0] | server.js]
+[2025-07-18 15:35:55.549 | [32minfo[39m | LOG: Key: 123 State: "customerView" NextEvents: BROWSE,SEARCH,FETCH_RESULTS,GO_CART,GO_PROFILE,LOGOUT,GO_SELLER | server.js]
+[2025-07-18 15:36:14.177 | [31merror[39m | LOG: TypeError: Cannot read properties of undefined (reading 'withConfig')
+    at createService (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:21:45)
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:75:18
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:582:12)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:291:5) | server.js]
+[2025-07-18 15:40:20.114 | [32minfo[39m | LOG: Key: 123 State: "idle" NextEvents: LOGIN | server.js]
+[2025-07-18 15:40:20.123 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:40:20.127 | [32minfo[39m | LOG: Front-End transition = LOGIN | server.js]
+[2025-07-18 15:40:20.137 | [32minfo[39m | LOG: Key: 123 State: "authenticating" NextEvents: done.invoke.loginService,error.platform.loginService | server.js]
+[2025-07-18 15:40:21.148 | [32minfo[39m | LOG: Key: 123 State: "authFlow" NextEvents: GO_CUSTOMER,GO_SELLER,LOGOUT | server.js]
+[2025-07-18 15:41:02.930 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:41:02.994 | [32minfo[39m | LOG: Front-End transition = BROWSE | server.js]
+[2025-07-18 15:41:25.455 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:41:25.460 | [32minfo[39m | LOG: Front-End transition = GO_CUSTOMER | server.js]
+[2025-07-18 15:41:25.465 | [32minfo[39m | LOG: Key: 123 State: "customerView" NextEvents: BROWSE,SEARCH,FETCH_RESULTS,GO_CART,GO_PROFILE,LOGOUT,GO_SELLER | server.js]
+[2025-07-18 15:45:29.931 | [31merror[39m | LOG: TypeError: Cannot read properties of undefined (reading 'withConfig')
+    at createService (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:21:45)
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:75:18
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:582:12)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:291:5) | server.js]
+[2025-07-18 15:46:04.344 | [31merror[39m | LOG: TypeError: Cannot read properties of undefined (reading 'withConfig')
+    at createService (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:21:45)
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\server.js:75:18
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:295:15
+    at processParams (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:582:12)
+    at next (C:\Users\Zohaib Jadoon\Downloads\internship\fsm\node_modules\router\index.js:291:5) | server.js]
+[2025-07-18 15:49:53.278 | [32minfo[39m | LOG: Key: 123 State: "idle" NextEvents: LOGIN | server.js]
+[2025-07-18 15:49:53.286 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:49:53.287 | [32minfo[39m | LOG: Front-End transition = LOGIN | server.js]
+[2025-07-18 15:49:53.312 | [32minfo[39m | LOG: Key: 123 State: "authenticating" NextEvents: done.invoke.loginService,error.platform.loginService | server.js]
+[2025-07-18 15:49:54.332 | [32minfo[39m | LOG: Key: 123 State: "authFlow" NextEvents: GO_CUSTOMER,GO_SELLER,LOGOUT | server.js]
+[2025-07-18 15:50:46.697 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:50:46.699 | [32minfo[39m | LOG: Front-End transition = GO_CUSTOMER | server.js]
+[2025-07-18 15:50:46.702 | [32minfo[39m | LOG: Key: 123 State: "customerView" NextEvents: BROWSE,SEARCH,FETCH_RESULTS,GO_CART,GO_PROFILE,LOGOUT,GO_SELLER | server.js]
+[2025-07-18 15:51:04.443 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 15:51:04.445 | [32minfo[39m | LOG: Front-End transition = GO_PROFILE | server.js]
+[2025-07-18 15:51:04.448 | [32minfo[39m | LOG: Key: 123 State: "profileForm" NextEvents: EDIT_PROFILE,BACK | server.js]
+[2025-07-18 17:16:04.903 | [32minfo[39m | LOG: Key: 123 State: "idle" NextEvents: LOGIN | server.js]
+[2025-07-18 17:16:04.915 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 17:16:04.916 | [32minfo[39m | LOG: Front-End transition = LOGIN | server.js]
+[2025-07-18 17:16:04.922 | [32minfo[39m | LOG: Key: 123 State: "authenticating" NextEvents: SUCCESS,FAILURE | server.js]
+[2025-07-18 17:21:07.454 | [32minfo[39m | LOG: Key: 123 State: "idle" NextEvents: LOGIN | server.js]
+[2025-07-18 17:21:07.471 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 17:21:07.473 | [32minfo[39m | LOG: Front-End transition = LOGIN | server.js]
+[2025-07-18 17:21:07.500 | [32minfo[39m | LOG: Key: 123 State: "authenticating" NextEvents: SUCCESS,FAILURE | server.js]
+[2025-07-18 17:43:18.623 | [32minfo[39m | LOG: Key: 123 State: "chooseView" NextEvents: CHOOSE_CUSTOMER,CHOOSE_SELLER | server.js]
+[2025-07-18 17:43:18.630 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 17:43:18.632 | [32minfo[39m | LOG: Front-End transition = CHOOSE_CUSTOMER | server.js]
+[2025-07-18 17:43:18.639 | [32minfo[39m | LOG: Key: 123 State: "authenticatingCustomer" NextEvents: SUCCESS,FAILURE | server.js]
+[2025-07-18 17:43:30.461 | [32minfo[39m | LOG: Data from Front-End = {}  | server.js]
+[2025-07-18 17:43:30.462 | [32minfo[39m | LOG: Front-End transition = SUCCESS | server.js]
+[2025-07-18 17:43:30.466 | [32minfo[39m | LOG: Key: 123 State: "customerView" NextEvents: LOGOUT,GO_SELLER,BROWSE_GAMES,ADD_TO_CART,GO_CHECKOUT,GO_PROFILE | server.js]
