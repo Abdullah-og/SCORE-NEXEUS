@@ -79,7 +79,7 @@ const fetchMachine = createMachine({
     MANAGEPLAYER:{
       on:{
         Edit:{
-          target:'MANAGEPLAYER',
+          target:'EDITPLAYER',
           actions:['EditName']
         },
         Delete:{

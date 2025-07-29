@@ -320,11 +320,7 @@
               </div>
 
               <div class="form-actions">
-                <button
-                  type="button"
-                  @click="showEditModal = false"
-                  class="cancel-btn"
-                >
+                <button type="button" @click="cancelEdit" class="cancel-btn">
                   Cancel
                 </button>
                 <button type="submit" class="save-btn">Save Changes</button>
@@ -415,9 +411,19 @@ function getTeamColor(teamName) {
   return colors[index];
 }
 
-function editPlayer(player) {
+async function editPlayer(player) {
   editingPlayer.value = { ...player };
   showEditModal.value = true;
+
+  try {
+    const fsmResult = await fsmApi.sendTransition(user.value.id, "Edit", {
+      playerId: player.id,
+      editor: user.value.email,
+    });
+    console.log("FSM State (after Edit clicked):", fsmResult.state);
+  } catch (err) {
+    console.error("FSM Edit transition failed:", err);
+  }
 }
 
 async function updatePlayer() {
@@ -430,13 +436,30 @@ async function updatePlayer() {
     showEditModal.value = false;
     await refreshPlayers();
 
-    await fsmApi.sendTransition(user.value.id, "Edit", {
-      updatedPlayerId: editingPlayer.value.id,
-      editor: user.value.email,
-    });
+    const fsmResult = await fsmApi.sendTransition(
+      user.value.id,
+      "Savechanges",
+      {
+        updatedPlayerId: editingPlayer.value.id,
+        editor: user.value.email,
+      }
+    );
+    console.log("FSM State (after Save Changes):", fsmResult.state);
   } catch (err) {
     console.error("Update failed:", err);
     alert("Failed to update player!");
+  }
+}
+async function cancelEdit() {
+  showEditModal.value = false;
+
+  try {
+    const fsmResult = await fsmApi.sendTransition(user.value.id, "Cancel", {
+      cancelledBy: user.value.email,
+    });
+    console.log("FSM State (after Cancel):", fsmResult.state);
+  } catch (err) {
+    console.error("FSM Cancel transition failed:", err);
   }
 }
 
