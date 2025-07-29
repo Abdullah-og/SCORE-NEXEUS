@@ -3,6 +3,7 @@ const cors = require("cors");
 const { interpret } = require("xstate");
 const machine = require("./stateMachine.js");
 const log = require("./log.js");
+const db = require("./db.js");
 const app = express();
 const PORT = 4000;
 
@@ -73,39 +74,39 @@ app.post('/fsm/machine', (req, res) => {
       return res.status(400).json({ code: "FSM-03", errorMessage: "Missing transition event" });
     }
 
-    if (service.state.nextEvents.includes(transition)) {
-      service.send({
-        ...jsonObj,
-        type: transition,
-      });
-      return res.json({
-        state: service.state.value,
-        context: service.state.context,
-        nextEvents: service.state.nextEvents,
-      });
-    } else {
-      return res.status(400).json({
-        code: "FSM-01",
-        errorMessage: "Invalid transition event for current state",
-        currentState: service.state.value,
-        nextEvents: service.state.nextEvents,
-        context: service.state.context,
-      });
-    }
+    
+    db.query('SELECT NOW() AS currentTime', (dbErr, results) => {
+      if (dbErr) {
+        logger.error(`Database query error: ${dbErr.message}`);
+        return res.status(500).json({ error: "Database query failed" });
+      }
+      logger.info(`Database query result: ${JSON.stringify(results)}`);
+
+      if (service.state.nextEvents.includes(transition)) {
+        service.send({
+          ...jsonObj,
+          type: transition,
+        });
+        return res.json({
+          state: service.state.value,
+          context: service.state.context,
+          nextEvents: service.state.nextEvents,
+          dbTime: results[0].currentTime,
+        });
+      } else {
+        return res.status(400).json({
+          code: "FSM-01",
+          errorMessage: "Invalid transition event for current state",
+          currentState: service.state.value,
+          nextEvents: service.state.nextEvents,
+          context: service.state.context,
+        });
+      }
+    });
   } catch (error) {
     logger.error(`Error processing request: ${error.message}`);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
-app.use((req, res) => {
-  logger.info(`Received request for unknown route: ${req.method} ${req.url}`);
-  res.status(404).json({ error: "Route not found" });
-});
-
-app.use((err, req, res, next) => {
-  logger.error(err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 app.listen(PORT, () => {
