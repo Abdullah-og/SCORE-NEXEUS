@@ -6,13 +6,19 @@ const log = require("./log.js");
 const db = require("./db.js");
 const app = express();
 const PORT = 4000;
+const playerRoutes = require("./routes/players");
+const matchesRoutes = require("./routes/matches");
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const logger = log("server.js");
 
+app.use("/players", playerRoutes);
+app.use("/matches", matchesRoutes);
+
+
+const logger = log("server.js");
 
 const keys = {};
 
@@ -21,7 +27,7 @@ function createService(key) {
     actions: {
       sendCtx: (context, event) => {
         logger.info(`sendCtx action called with context: ${JSON.stringify(context)}, event: ${JSON.stringify(event)}`);
-       
+
       }
     }
   }).onTransition((state) => {
@@ -47,7 +53,7 @@ app.use((req, res, next) => {
 
 app.post('/fsm/machine', (req, res) => {
   console.log("Incoming FSM payload:", req.body);
-  
+
   try {
     const httpReq = req.body || {};
     const key = httpReq.key;
@@ -74,7 +80,7 @@ app.post('/fsm/machine', (req, res) => {
       return res.status(400).json({ code: "FSM-03", errorMessage: "Missing transition event" });
     }
 
-    
+
     db.query('SELECT NOW() AS currentTime', (dbErr, results) => {
       if (dbErr) {
         logger.error(`Database query error: ${dbErr.message}`);
@@ -108,6 +114,8 @@ app.post('/fsm/machine', (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

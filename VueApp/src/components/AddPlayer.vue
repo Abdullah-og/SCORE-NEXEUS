@@ -234,22 +234,16 @@ async function addPlayer() {
   successMessage.value = "";
 
   const newPlayer = {
-    name: name.value,
-    role: role.value,
-    team: team.value,
-    battingStyle: battingStyle.value,
-    bowlingStyle: bowlingStyle.value,
-    dob: dob.value,
-    stats: {
-      matches: 0,
-      runs: 0,
-      wickets: 0,
-      average: 0,
-    },
+    playerName: name.value,
+    playerRole: role.value,
+    Team: team.value,
+    BattingStyle: battingStyle.value,
+    BowlingStyle: bowlingStyle.value,
+    DateofBirth: dob.value,
   };
 
   try {
-    const response = await fetch("http://localhost:3000/players", {
+    const response = await fetch("http://localhost:4000/players", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newPlayer),

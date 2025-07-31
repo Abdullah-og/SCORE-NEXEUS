@@ -121,6 +121,39 @@
         "wickets": 0,
         "average": 0
       }
+    },
+    {
+      "id": "c7ef",
+      "name": "sadlkm",
+      "role": "Batsman",
+      "team": "kedf",
+      "battingStyle": "kldfs",
+      "bowlingStyle": "kdc",
+      "dob": "2025-07-30",
+      "stats": {
+        "matches": 0,
+        "runs": 0,
+        "wickets": 0,
+        "average": 0
+      }
+    },
+    {
+      "id": "aa1f",
+      "playerName": "dfskjv",
+      "playerRole": "klds",
+      "Team": "df",
+      "BattingStyle": "k",
+      "BowlingStyle": "k",
+      "DateofBirth": "2025-07-30"
+    },
+    {
+      "id": "b15a",
+      "playerName": "Babar Azam",
+      "playerRole": "Batsman",
+      "Team": "Pakistan",
+      "BattingStyle": "Right-handed",
+      "BowlingStyle": "Right-arm offbreak",
+      "DateofBirth": "1994-10-15"
     }
   ],
   "matches": [
@@ -131,6 +164,14 @@
       "time": "15:31",
       "venue": "Stadium",
       "id": "4234"
+    },
+    {
+      "id": "732a",
+      "Team1": "fvk",
+      "Team2": "dv",
+      "Date": "2025-07-31",
+      "Time": "15:09",
+      "Venue": "sdk"
     }
   ]
 }
