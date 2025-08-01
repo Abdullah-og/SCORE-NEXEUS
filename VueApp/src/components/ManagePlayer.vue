@@ -353,6 +353,7 @@ const userInitial = computed(() => {
 const players = ref([]);
 const searchQuery = ref("");
 const showEditModal = ref(false);
+
 editingPlayer: ref({
   playerName: "",
   playerRole: "",
