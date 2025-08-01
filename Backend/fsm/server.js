@@ -6,16 +6,19 @@ const log = require("./log.js");
 const db = require("./db.js");
 const app = express();
 const PORT = 4000;
+const userRoutes = require("./routes/users");
 const playerRoutes = require("./routes/players");
-// const matchesRoutes = require("./routes/matches");
+const matchRoutes = require("./routes/matches") 
+
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-
+app.use("/users", userRoutes);
 app.use("/players", playerRoutes);
-//app.use("/matches", matchesRoutes);
+app.use("/matches", matchRoutes);
+
 
 
 const logger = log("server.js");

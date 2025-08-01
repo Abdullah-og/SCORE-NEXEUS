@@ -15,7 +15,7 @@
           <span>{{ userInitial }}</span>
         </div>
         <div class="user-info">
-          <strong>{{ user?.email }}</strong>
+          <strong>{{ user?.Email }}</strong>
           <span>Admin</span>
         </div>
       </div>
@@ -148,7 +148,6 @@
         </div>
       </div>
 
-      <!-- Match Scheduler -->
       <div class="match-schedule-container">
         <div class="schedule-card">
           <div class="card-header">
@@ -160,7 +159,7 @@
               <div class="form-group">
                 <label>Team 1</label>
                 <input
-                  v-model="team1"
+                  v-model="Team1"
                   type="text"
                   required
                   placeholder="Enter Team 1"
@@ -170,7 +169,7 @@
               <div class="form-group">
                 <label>Team 2</label>
                 <input
-                  v-model="team2"
+                  v-model="Team2"
                   type="text"
                   required
                   placeholder="Enter Team 2"
@@ -181,19 +180,19 @@
             <div class="form-row">
               <div class="form-group">
                 <label>Date</label>
-                <input v-model="date" type="date" required />
+                <input v-model="DateVal" type="date" required />
               </div>
 
               <div class="form-group">
                 <label>Time</label>
-                <input v-model="time" type="time" required />
+                <input v-model="Time" type="time" required />
               </div>
             </div>
 
             <div class="form-group">
               <label>Venue</label>
               <input
-                v-model="venue"
+                v-model="Venue"
                 type="text"
                 required
                 placeholder="Match Venue"
@@ -236,17 +235,17 @@
                 <div class="team">
                   <div
                     class="team-logo"
-                    :style="{ backgroundColor: getTeamColor(match.team1) }"
+                    :style="{ backgroundColor: getTeamColor(match.Team1) }"
                   ></div>
-                  <span class="team-name">{{ match.team1 }}</span>
+                  <span class="team-name">{{ match.Team1 }}</span>
                 </div>
                 <div class="vs">VS</div>
                 <div class="team">
                   <div
                     class="team-logo"
-                    :style="{ backgroundColor: getTeamColor(match.team2) }"
+                    :style="{ backgroundColor: getTeamColor(match.Team2) }"
                   ></div>
-                  <span class="team-name">{{ match.team2 }}</span>
+                  <span class="team-name">{{ match.Team2 }}</span>
                 </div>
               </div>
 
@@ -275,7 +274,7 @@
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
-                  <span>{{ formatDate(match.date) }}</span>
+                  <span>{{ formatDate(match.Date) }}</span>
                 </div>
 
                 <div class="detail-item">
@@ -293,7 +292,7 @@
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
-                  <span>{{ match.time }}</span>
+                  <span>{{ match.Time }}</span>
                 </div>
 
                 <div class="detail-item">
@@ -313,7 +312,7 @@
                     ></path>
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
-                  <span>{{ match.venue }}</span>
+                  <span>{{ match.Venue }}</span>
                 </div>
               </div>
 
@@ -341,7 +340,7 @@
                 </button>
                 <button
                   class="action-btn delete"
-                  @click="deleteMatch(match.id)"
+                  @click="deleteMatch(match.Team1)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -393,12 +392,12 @@ const currentDate = ref(
 );
 
 const matches = ref([]);
-const team1 = ref("");
-const team2 = ref("");
-const date = ref("");
-const time = ref("");
-const venue = ref("");
-const editingMatchId = ref(null);
+const Team1 = ref("");
+const Team2 = ref("");
+const DateVal = ref("");
+const Time = ref("");
+const Venue = ref("");
+const editingTeam1 = ref(null);
 
 onMounted(async () => {
   if (!user.value) {
@@ -406,33 +405,33 @@ onMounted(async () => {
     router.push("/");
   } else {
     const fsmResult = await fsmApi.sendTransition(
-      user.value.id,
+      user.value.Email,
       "ScheduleMatch",
       {
         userId: user.value.id,
-        email: user.value.email,
+        email: user.value.Email,
       }
     );
     console.log("FSM State:", fsmResult.state);
   }
 
-  const res = await fetch("http://localhost:3000/matches");
+  const res = await fetch("http://localhost:4000/matches");
   matches.value = await res.json();
 });
 
 async function scheduleMatch() {
   const matchData = {
-    team1: team1.value,
-    team2: team2.value,
-    date: date.value,
-    time: time.value,
-    venue: venue.value,
+    Team1: Team1.value,
+    Team2: Team2.value,
+    Date: DateVal.value,
+    Time: Time.value,
+    Venue: Venue.value,
   };
 
   try {
-    if (editingMatchId.value) {
+    if (editingTeam1.value) {
       const res = await fetch(
-        `http://localhost:3000/matches/${editingMatchId.value}`,
+        `http://localhost:4000/matches/${editingTeam1.value}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -440,44 +439,40 @@ async function scheduleMatch() {
         }
       );
 
-      const updatedMatch = await res.json();
+      if (!res.ok) throw new Error("Update failed");
+      const updated = await res.json();
+
       const index = matches.value.findIndex(
-        (m) => m.id === editingMatchId.value
+        (m) => m.Team1 === editingTeam1.value
       );
-      if (index !== -1) matches.value[index] = updatedMatch;
+      if (index !== -1) matches.value[index] = updated;
 
       alert("Match updated!");
-      editingMatchId.value = null;
+      editingTeam1.value = null;
 
-      const fsmResult = await fsmApi.sendTransition(user.value.id, "Edit", {
-        updatedMatch: updatedMatch,
-        editedBy: user.value.email,
+      await fsmApi.sendTransition(user.value.Email, "Edit", {
+        updatedMatch: updated,
+        editedBy: user.value.Email,
       });
-      console.log("FSM State:", fsmResult.state);
     } else {
-      const res = await fetch("http://localhost:3000/matches", {
+      const res = await fetch("http://localhost:4000/matches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(matchData),
       });
 
+      if (!res.ok) throw new Error("Creation failed");
       const created = await res.json();
-      matches.value.push(created);
+      matches.value.push(matchData); // returned result is empty (you’re not sending back inserted row in backend)
       alert("Match scheduled!");
 
-      const fsmResult = await fsmApi.sendTransition(
-        user.value.id,
-        "ScheduleMatch",
-        {
-          createdMatch: created,
-          scheduledBy: user.value.email,
-        }
-      );
-      console.log("FSM State:", fsmResult.state);
+      await fsmApi.sendTransition(user.value.Email, "ScheduleMatch", {
+        createdMatch: created,
+        scheduledBy: user.value.Email,
+      });
     }
 
-    // Reset form
-    team1.value = team2.value = date.value = time.value = venue.value = "";
+    Team1.value = Team2.value = DateVal.value = Time.value = Venue.value = "";
   } catch (err) {
     alert("Something went wrong.");
     console.error(err);
@@ -485,33 +480,37 @@ async function scheduleMatch() {
 }
 
 function editMatch(match) {
-  editingMatchId.value = match.id;
-  team1.value = match.team1;
-  team2.value = match.team2;
-  date.value = match.date;
-  time.value = match.time;
-  venue.value = match.venue;
+  editingTeam1.value = match.Team1;
+  Team1.value = match.Team1;
+  Team2.value = match.Team2;
+  DateVal.value = match.Date;
+  Time.value = match.Time;
+  Venue.value = match.Venue;
 
   fsmApi
-    .sendTransition(user.value.id, "Edit", {
-      matchId: match.id,
-      editedBy: user.value.email,
+    .sendTransition(user.value.Email, "Edit", {
+      matchId: match.Team1,
+      editedBy: user.value.Email,
     })
     .then((fsmResult) => {
-      console.log("FSM State :", fsmResult.state);
+      console.log("FSM State:", fsmResult.state);
     });
 }
 
-async function deleteMatch(id) {
+async function deleteMatch(Team1Key) {
   if (!confirm("Are you sure you want to delete this match?")) return;
 
   try {
-    await fetch(`http://localhost:3000/matches/${id}`, { method: "DELETE" });
-    matches.value = matches.value.filter((m) => m.id !== id);
+    const res = await fetch(`http://localhost:4000/matches/${Team1Key}`, {
+      method: "DELETE",
+    });
 
-    const fsmResult = await fsmApi.sendTransition(user.value.id, "Delete", {
-      deletedMatchId: id,
-      deletedBy: user.value.email,
+    if (!res.ok) throw new Error("Delete failed");
+    matches.value = matches.value.filter((m) => m.Team1 !== Team1Key);
+
+    const fsmResult = await fsmApi.sendTransition(user.value.Email, "Delete", {
+      deletedMatchId: Team1Key,
+      deletedBy: user.value.Email,
     });
     console.log("FSM State:", fsmResult.state);
   } catch (err) {
@@ -529,7 +528,7 @@ function getTeamColor(name) {
     "#F44336",
     "#FFC107",
   ];
-  return colors[name.charCodeAt(0) % colors.length];
+  return name ? colors[name.charCodeAt(0) % colors.length] : "#ccc";
 }
 
 function formatDate(dateStr) {
@@ -544,10 +543,14 @@ function formatDate(dateStr) {
 async function logout() {
   if (user.value?.id) {
     try {
-      const fsmResult = await fsmApi.sendTransition(user.value.id, "logout", {
-        userId: user.value.id,
-        email: user.value.email,
-      });
+      const fsmResult = await fsmApi.sendTransition(
+        user.value.Email,
+        "logout",
+        {
+          userId: user.value.id,
+          email: user.value.Email,
+        }
+      );
       console.log("FSM State:", fsmResult.state);
     } catch (err) {
       console.error("FSM logout failed:", err);

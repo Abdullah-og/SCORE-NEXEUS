@@ -92,32 +92,43 @@ const togglePasswordVisibility = () => {
 
 async function handleLogin() {
   try {
-    const response = await fetch(
-      `http://localhost:3000/users?email=${email.value}&password=${password.value}`
-    );
-    const users = await response.json();
+    const response = await fetch("http://localhost:4000/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Email: email.value,
+        Password: password.value,
+      }),
+    });
 
-    if (users.length) {
-      const user = users[0];
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      store.commit("setUser", user);
-      const fsmResult = await fsmApi.sendTransition(user.id, "login", {
-        userId: user.id,
-        email: user.email,
-      });
+    const data = await response.json();
 
-      console.log("FSM State:", fsmResult.state);
-
-      //optional
-      localStorage.setItem("fsmState", JSON.stringify(fsmResult));
-
-      router.push("/dashboard");
-    } else {
-      alert("Invalid credentials!");
+    if (!response.ok) {
+      alert(data.message || "Login failed.");
+      return;
     }
+
+    // Success
+    const user = data.user;
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    store.commit("setUser", user);
+
+    // Optional FSM transition
+    try {
+      const fsmResult = await fsmApi.sendTransition(user.Email, "login", {
+        email: user.Email,
+      });
+      localStorage.setItem("fsmState", JSON.stringify(fsmResult));
+    } catch (fsmError) {
+      console.warn("FSM error (optional):", fsmError);
+    }
+
+    router.push("/dashboard");
   } catch (error) {
     console.error("Login error:", error);
-    alert("Error during login.");
+    alert("Server error. Please try again.");
   }
 }
 </script>

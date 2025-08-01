@@ -35,23 +35,22 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { fsmApi } from "@/api.js";
+import { fsmApi } from "@/api.js"; // Optional FSM logic
 
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const errorMessage = ref("");
-const router = useRouter();
-const store = useStore();
 
 const emailError = ref("");
 const passwordError = ref("");
 const confirmError = ref("");
 
-import { computed } from "vue";
+const router = useRouter();
+const store = useStore();
 
 const isFormValid = computed(() => {
   return (
@@ -86,6 +85,7 @@ function validateForm() {
     passwordError.value = "Password must be at least 7 characters.";
     isValid = false;
   }
+
   if (confirmPassword.value !== password.value) {
     confirmError.value = "Passwords do not match.";
     isValid = false;
@@ -97,50 +97,47 @@ function validateForm() {
 async function handleSignup() {
   errorMessage.value = "";
 
-  if (!validateForm()) {
-    return;
-  }
+  if (!validateForm()) return;
+
+  const newUser = {
+    Email: email.value,
+    Password: password.value,
+  };
 
   try {
-    const res = await fetch(`http://localhost:3000/users?email=${email.value}`);
-    const users = await res.json();
-
-    if (users.length > 0) {
-      errorMessage.value = "Email already registered!";
-      return;
-    }
-
-    const newUser = {
-      email: email.value,
-      password: password.value,
-    };
-
-    const saveRes = await fetch("http://localhost:3000/users", {
+    const response = await fetch("http://localhost:4000/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newUser),
     });
 
-    if (!saveRes.ok) throw new Error("Failed to register user");
+    const data = await response.json();
 
-    const savedUser = await saveRes.json();
-    store.commit("setUser", savedUser);
+    if (!response.ok) {
+      errorMessage.value = data.message || "Signup failed.";
+      return;
+    }
 
-    const fsmResult = await fsmApi.sendTransition(savedUser.email, "signup", {
-      userId: savedUser.id,
-      email: savedUser.email,
-    });
+    store.commit("setUser", { Email: data.user.Email });
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify({ Email: data.user.Email })
+    );
 
-    console.log("FSM State :", fsmResult.state);
-
-    // Optionally
-    localStorage.setItem("fsmState", JSON.stringify(fsmResult));
-    localStorage.setItem("currentUser", JSON.stringify(savedUser));
+    // Optional FSM transition if used
+    try {
+      const fsmResult = await fsmApi.sendTransition(data.user.Email, "signup", {
+        email: data.user.Email,
+      });
+      localStorage.setItem("fsmState", JSON.stringify(fsmResult));
+    } catch (fsmError) {
+      console.warn("FSM Error (optional):", fsmError);
+    }
 
     router.push("/");
   } catch (error) {
     console.error("Signup error:", error);
-    errorMessage.value = "An error occurred while signing up.";
+    errorMessage.value = "Server error. Please try again.";
   }
 }
 </script>

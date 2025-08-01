@@ -555,7 +555,7 @@ onMounted(async () => {
   currentDate.value = formatCurrentDate();
 
   try {
-    const playerRes = await fetch("http://localhost:3000/players");
+    const playerRes = await fetch("http://localhost:4000/players");
     const players = await playerRes.json();
 
     const sorted = players

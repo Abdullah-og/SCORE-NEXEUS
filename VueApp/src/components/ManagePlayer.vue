@@ -343,7 +343,7 @@ import { fsmApi } from "@/api.js";
 const store = useStore();
 const router = useRouter();
 
-const API_URL = "http://localhost:4000/players";
+const API_URL = "http://localhost:3000/players";
 
 const user = computed(() => store.state.currentUser);
 const userInitial = computed(() => {
