@@ -7,7 +7,7 @@ const db = require("./db.js");
 const app = express();
 const PORT = 4000;
 const playerRoutes = require("./routes/players");
-const matchesRoutes = require("./routes/matches");
+// const matchesRoutes = require("./routes/matches");
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -15,7 +15,7 @@ app.use(express.json());
 
 
 app.use("/players", playerRoutes);
-app.use("/matches", matchesRoutes);
+//app.use("/matches", matchesRoutes);
 
 
 const logger = log("server.js");
