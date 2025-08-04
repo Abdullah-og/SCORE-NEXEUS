@@ -9,6 +9,7 @@ import AddPlayerView from '../views/AddPlayerView.vue';
 import ManagePlayersView from '../views/ManagePlayersView.vue'; 
 import MatchScheduleView from '../views/MatchScheduleView.vue';
 import ForgotPasswordView from '../views/ForgotPasswordView.vue';
+import AboutView from '../views/AboutView.vue';
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
     path: '/schedule',
     component: MatchScheduleView,
   },
+  {
+  path: '/about',
+  component: AboutView,
+},
+
   {
     path: '/dashboard/manage-players',
     component: ManagePlayersView, 
