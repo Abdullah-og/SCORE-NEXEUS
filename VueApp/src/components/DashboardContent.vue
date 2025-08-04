@@ -15,7 +15,7 @@
           <span>{{ userInitial }}</span>
         </div>
         <div class="user-info">
-          <strong>{{ user?.email }}</strong>
+          <strong>{{ user?.Email }}</strong>
           <span>Admin</span>
         </div>
       </div>
@@ -212,7 +212,7 @@
           </div>
           <div class="stat-trend">
             <span v-if="upcomingMatches.length"
-              >Next: {{ upcomingMatches[0].date }}</span
+              >Next: {{ upcomingMatches[0].Date }}</span
             >
             <span v-else>No matches</span>
           </div>
@@ -296,17 +296,17 @@
                 <div class="team">
                   <div
                     class="team-logo"
-                    :style="{ backgroundColor: match.team1.color }"
+                    :style="{ backgroundColor: match.Team1.color }"
                   ></div>
-                  <span>{{ match.team1.name }}</span>
+                  <span>{{ match.Team1.name }}</span>
                 </div>
                 <div class="vs">VS</div>
                 <div class="team">
                   <div
                     class="team-logo"
-                    :style="{ backgroundColor: match.team2.color }"
+                    :style="{ backgroundColor: match.Team2.color }"
                   ></div>
-                  <span>{{ match.team2.name }}</span>
+                  <span>{{ match.Team2.name }}</span>
                 </div>
               </div>
               <div class="match-info">
@@ -325,7 +325,7 @@
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
-                  <span>{{ match.date }}</span>
+                  <span>{{ match.Date }}</span>
                 </div>
                 <div class="match-location">
                   <svg
@@ -344,7 +344,7 @@
                     ></path>
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
-                  <span>{{ match.venue }}</span>
+                  <span>{{ match.Venue }}</span>
                 </div>
               </div>
             </div>
@@ -383,7 +383,7 @@
               <div class="activity-details">
                 <h3>{{ activity.title }}</h3>
                 <p>{{ activity.description }}</p>
-                <span>{{ activity.time }}</span>
+                <span>{{ activity.Time }}</span>
               </div>
             </div>
           </div>
@@ -404,8 +404,8 @@
                 <img :src="player.avatar" alt="Player Avatar" />
               </div>
               <div class="player-info">
-                <h3>{{ player.name }}</h3>
-                <p>{{ player.role }}</p>
+                <h3>{{ player.playerName }}</h3>
+                <p>{{ player.playerRole }}</p>
               </div>
               <div class="player-stats">
                 <div class="stat">
@@ -534,7 +534,7 @@ function getTeamColor(teamName) {
   ];
 
   if (!teamName || typeof teamName !== "string") {
-    return "#9E9E9E"; // default gray
+    return "#9E9E9E";
   }
 
   const index = teamName.charCodeAt(0) % colors.length;
@@ -548,6 +548,7 @@ function formatDate(dateString) {
     month: "short",
     day: "numeric",
   });
+  role;
 }
 
 onMounted(async () => {
@@ -563,17 +564,14 @@ onMounted(async () => {
     const playerRes = await fetch("http://localhost:4000/players");
     const players = await playerRes.json();
 
-    const sorted = players
-      .filter((p) => p.stats?.runs !== undefined)
-      .sort((a, b) => b.stats.runs - a.stats.runs)
-      .slice(0, 4);
+    const sorted = players.slice(0, 4);
 
     topPlayers.value = sorted.map((p, i) => ({
       id: p.id,
-      name: p.name,
-      role: p.role,
-      runs: p.stats.runs,
-      avg: p.stats.average || 0,
+      playerName: p.playerName,
+      playerRole: p.playerRole,
+      runs: 0,
+      avg: 0,
       rank: i + 1,
       avatar:
         "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTYgMTJjMCAxLjY1Ny0xLjc5IDMtNCAzczQtMS4zNDMgNC0zIi8+PC9zdmc+",
@@ -588,7 +586,7 @@ onMounted(async () => {
         id: 1,
         title: "Player Added",
         description: `${latestPlayer.playerName} added to the team`,
-        time: getCurrentTime(),
+        Time: getCurrentTime(),
         color: "#4CAF50",
       });
     }
@@ -600,14 +598,14 @@ onMounted(async () => {
 
     const upcoming = matchData
       .map((match) => {
-        const matchDateTime = new Date(`${match.date}T${match.time}`);
+        const matchDateTime = new Date(`${match.Date}T${match.Time}`);
         return {
           id: match.id,
-          team1: { name: match.team1, color: getTeamColor(match.team1) },
-          team2: { name: match.team2, color: getTeamColor(match.team2) },
+          Team1: { name: match.Team1, color: getTeamColor(match.Team1) },
+          Team2: { name: match.Team2, color: getTeamColor(match.Team2) },
           dateTime: matchDateTime,
-          date: `${formatDate(match.date)}, ${match.time}`,
-          venue: match.venue,
+          Date: `${formatDate(match.Date)}, ${match.Time}`,
+          Venue: match.Venue,
         };
       })
       .filter((match) => match.dateTime > now)
@@ -621,7 +619,7 @@ onMounted(async () => {
       baseActivities.push({
         id: 2,
         title: "Match Scheduled",
-        description: `${latestMatch.team1} vs ${latestMatch.team2} scheduled`,
+        description: `${latestMatch.Team1} vs ${latestMatch.Team2} scheduled`,
         time: getCurrentTime(),
         color: "#2196F3",
       });
@@ -645,10 +643,14 @@ onMounted(async () => {
 async function logout() {
   if (user.value?.id) {
     try {
-      const fsmResult = await fsmApi.sendTransition(user.value.id, "logout", {
-        userId: user.value.id,
-        email: user.value.email,
-      });
+      const fsmResult = await fsmApi.sendTransition(
+        user.value.Email,
+        "logout",
+        {
+          userId: user.value.id,
+          email: user.value.Email,
+        }
+      );
       console.log("FSM State:", fsmResult.state);
     } catch (err) {
       console.error("FSM logout failed:", err);
