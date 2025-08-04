@@ -373,7 +373,7 @@ const API_URL = "http://localhost:4000/players";
 
 const user = computed(() => store.state.currentUser);
 const userInitial = computed(() => {
-  return user.value?.email ? user.value.email.charAt(0).toUpperCase() : "U";
+  return user.value?.Email ? user.value.Email.charAt(0).toUpperCase() : "U";
 });
 
 const players = ref([]);

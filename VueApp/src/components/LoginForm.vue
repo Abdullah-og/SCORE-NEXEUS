@@ -115,12 +115,12 @@ async function handleLogin() {
     localStorage.setItem("currentUser", JSON.stringify(user));
     store.commit("setUser", user);
 
-    // Optional FSM transition
     try {
       const fsmResult = await fsmApi.sendTransition(user.Email, "login", {
         email: user.Email,
       });
       localStorage.setItem("fsmState", JSON.stringify(fsmResult));
+      console.log("FSM State:", fsmResult.state);
     } catch (fsmError) {
       console.warn("FSM error (optional):", fsmError);
     }

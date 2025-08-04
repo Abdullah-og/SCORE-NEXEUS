@@ -98,6 +98,10 @@ const fetchMachine = createMachine({
           target:'ADDPLAYER',
           actions:['PlayerAddition']
         },
+        ManagePlayer:{
+          target:'MANAGEPLAYER',
+          actions:['ManagePlayer']
+        },
         logout:{
           target:'LOGIN',
           actions:['Logout']
