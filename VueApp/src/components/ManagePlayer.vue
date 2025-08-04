@@ -16,7 +16,7 @@
           <span>{{ userInitial }}</span>
         </div>
         <div class="user-info">
-          <strong>{{ user?.email }}</strong>
+          <strong>{{ user?.Email }}</strong>
           <span>Admin</span>
         </div>
       </div>
@@ -210,21 +210,21 @@
                 </div>
               </div>
               <div>
-                <div class="player-name">{{ player.name }}</div>
+                <div class="player-name">{{ player.playerName }}</div>
                 <div class="player-id">ID: {{ player.id }}</div>
               </div>
             </div>
             <div class="table-cell">
-              <div class="role-badge" :class="player.role.toLowerCase()">
-                {{ player.role }}
+              <div class="role-badge" :class="player.playerRole.toLowerCase()">
+                {{ player.playerRole }}
               </div>
             </div>
             <div class="table-cell team-cell">
               <div
                 class="team-logo"
-                :style="{ backgroundColor: getTeamColor(player.team) }"
+                :style="{ backgroundColor: getTeamColor(player.Team) }"
               ></div>
-              <span>{{ player.team }}</span>
+              <span>{{ player.Team }}</span>
             </div>
             <div class="table-cell">
               <div class="status-badge active">Active</div>
@@ -251,7 +251,10 @@
                 </svg>
                 Edit
               </button>
-              <button @click="deletePlayer(player.id)" class="delete-btn">
+              <button
+                @click="deletePlayer(player.playerName)"
+                class="delete-btn"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -301,12 +304,16 @@
             <form @submit.prevent="updatePlayer">
               <div class="form-group">
                 <label>Player Name</label>
-                <input v-model="editingPlayer.name" type="text" required />
+                <input
+                  v-model="editingPlayer.playerName"
+                  type="text"
+                  required
+                />
               </div>
 
               <div class="form-group">
                 <label>Player Role</label>
-                <select v-model="editingPlayer.role" required>
+                <select v-model="editingPlayer.playerRole" required>
                   <option value="Batsman">Batsman</option>
                   <option value="Bowler">Bowler</option>
                   <option value="All-rounder">All-rounder</option>
@@ -316,7 +323,7 @@
 
               <div class="form-group">
                 <label>Team</label>
-                <input v-model="editingPlayer.team" type="text" required />
+                <input v-model="editingPlayer.Team" type="text" required />
               </div>
 
               <div class="form-actions">
@@ -343,7 +350,7 @@ import { fsmApi } from "@/api.js";
 const store = useStore();
 const router = useRouter();
 
-const API_URL = "http://localhost:3000/players";
+const API_URL = "http://localhost:4000/players";
 
 const user = computed(() => store.state.currentUser);
 const userInitial = computed(() => {
@@ -354,7 +361,8 @@ const players = ref([]);
 const searchQuery = ref("");
 const showEditModal = ref(false);
 
-editingPlayer: ref({
+// Correct syntax for ref object
+const editingPlayer = ref({
   playerName: "",
   playerRole: "",
   Team: "",
@@ -369,11 +377,11 @@ onMounted(async () => {
     router.push("/");
   } else {
     const fsmResult = await fsmApi.sendTransition(
-      user.value.id,
+      user.value.Email,
       "ManagePlayer",
       {
         userId: user.value.id,
-        email: user.value.email,
+        email: user.value.Email,
       }
     );
     console.log("FSM State:", fsmResult.state);
@@ -395,9 +403,9 @@ const filteredPlayers = computed(() => {
   const query = searchQuery.value.toLowerCase();
   return players.value.filter(
     (player) =>
-      player.name.toLowerCase().includes(query) ||
-      player.role.toLowerCase().includes(query) ||
-      player.team.toLowerCase().includes(query)
+      player.playerName.toLowerCase().includes(query) ||
+      player.playerRole.toLowerCase().includes(query) ||
+      player.Team.toLowerCase().includes(query)
   );
 });
 
@@ -410,6 +418,11 @@ function getTeamColor(teamName) {
     "#F44336",
     "#FFC107",
   ];
+
+  if (!teamName || typeof teamName !== "string") {
+    return "#9E9E9E"; // default gray
+  }
+
   const index = teamName.charCodeAt(0) % colors.length;
   return colors[index];
 }
@@ -419,9 +432,9 @@ async function editPlayer(player) {
   showEditModal.value = true;
 
   try {
-    const fsmResult = await fsmApi.sendTransition(user.value.id, "Edit", {
-      playerId: player.id,
-      editor: user.value.email,
+    const fsmResult = await fsmApi.sendTransition(user.value.Email, "Edit", {
+      playerName: player.playerName,
+      editor: user.value.Email,
     });
     console.log("FSM State (after Edit clicked):", fsmResult.state);
   } catch (err) {
@@ -432,7 +445,7 @@ async function editPlayer(player) {
 async function updatePlayer() {
   try {
     await axios.put(
-      `${API_URL}/${editingPlayer.value.id}`,
+      `${API_URL}/${editingPlayer.value.playerName}`,
       editingPlayer.value
     );
     alert("Player updated successfully!");
@@ -440,11 +453,11 @@ async function updatePlayer() {
     await refreshPlayers();
 
     const fsmResult = await fsmApi.sendTransition(
-      user.value.id,
+      user.value.Email,
       "Savechanges",
       {
-        updatedPlayerId: editingPlayer.value.id,
-        editor: user.value.email,
+        updatedPlayerName: editingPlayer.value.playerName,
+        editor: user.value.Email,
       }
     );
     console.log("FSM State (after Save Changes):", fsmResult.state);
@@ -453,12 +466,13 @@ async function updatePlayer() {
     alert("Failed to update player!");
   }
 }
+
 async function cancelEdit() {
   showEditModal.value = false;
 
   try {
-    const fsmResult = await fsmApi.sendTransition(user.value.id, "Cancel", {
-      cancelledBy: user.value.email,
+    const fsmResult = await fsmApi.sendTransition(user.value.Email, "Cancel", {
+      cancelledBy: user.value.Email,
     });
     console.log("FSM State (after Cancel):", fsmResult.state);
   } catch (err) {
@@ -466,16 +480,16 @@ async function cancelEdit() {
   }
 }
 
-async function deletePlayer(playerId) {
+async function deletePlayer(playerName) {
   if (confirm("Are you sure you want to delete this player?")) {
     try {
-      await axios.delete(`${API_URL}/${playerId}`);
+      await axios.delete(`${API_URL}/${playerName}`);
       alert("Player deleted successfully!");
       await refreshPlayers();
 
-      await fsmApi.sendTransition(user.value.id, "Delete", {
-        deletedPlayerId: playerId,
-        deletedBy: user.value.email,
+      await fsmApi.sendTransition(user.value.Email, "Delete", {
+        deletedPlayerName: playerName,
+        deletedBy: user.value.Email,
       });
     } catch (err) {
       console.error("Delete failed:", err);
@@ -487,10 +501,14 @@ async function deletePlayer(playerId) {
 async function logout() {
   if (user.value?.id) {
     try {
-      const fsmResult = await fsmApi.sendTransition(user.value.id, "logout", {
-        userId: user.value.id,
-        email: user.value.email,
-      });
+      const fsmResult = await fsmApi.sendTransition(
+        user.value.Email,
+        "logout",
+        {
+          userId: user.value.id,
+          email: user.value.Email,
+        }
+      );
       console.log("FSM State:", fsmResult.state);
     } catch (err) {
       console.error("FSM logout failed:", err);
@@ -501,6 +519,7 @@ async function logout() {
   router.push("/");
 }
 </script>
+>
 
 <style scoped>
 .dashboard-layout {

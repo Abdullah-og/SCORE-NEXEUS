@@ -532,6 +532,11 @@ function getTeamColor(teamName) {
     "#F44336",
     "#FFC107",
   ];
+
+  if (!teamName || typeof teamName !== "string") {
+    return "#9E9E9E"; // default gray
+  }
+
   const index = teamName.charCodeAt(0) % colors.length;
   return colors[index];
 }
@@ -582,13 +587,13 @@ onMounted(async () => {
       baseActivities.push({
         id: 1,
         title: "Player Added",
-        description: `${latestPlayer.name} added to the team`,
+        description: `${latestPlayer.playerName} added to the team`,
         time: getCurrentTime(),
         color: "#4CAF50",
       });
     }
 
-    const matchRes = await fetch("http://localhost:3000/matches");
+    const matchRes = await fetch("http://localhost:4000/matches");
     const matchData = await matchRes.json();
 
     const now = new Date();

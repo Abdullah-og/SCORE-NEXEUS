@@ -15,7 +15,7 @@
           <span>{{ userInitial }}</span>
         </div>
         <div class="user-info">
-          <strong>{{ user?.email }}</strong>
+          <strong>{{ user?.Email }}</strong>
           <span>Admin</span>
         </div>
       </div>
