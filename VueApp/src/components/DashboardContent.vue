@@ -95,6 +95,26 @@
           </svg>
           <span>Schedule Match</span>
         </RouterLink>
+
+        <RouterLink to="/about" class="sidebar-link">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="sidebar-icon"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span class="sidebar-label">About</span>
+        </RouterLink>
       </nav>
 
       <div class="sidebar-footer">
@@ -464,7 +484,8 @@
               </svg>
               <span>Schedule Match</span>
             </RouterLink>
-            <button class="action-btn">
+
+            <RouterLink to="/about" class="action-btn">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -480,7 +501,25 @@
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
               <span>Add Match</span>
-            </button>
+            </RouterLink>
+            <RouterLink to="/about" class="action-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>About</span>
+            </RouterLink>
           </div>
         </div>
       </div>
