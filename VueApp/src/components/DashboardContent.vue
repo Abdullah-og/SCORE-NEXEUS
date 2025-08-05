@@ -682,14 +682,10 @@ onMounted(async () => {
 async function logout() {
   if (user.value?.id) {
     try {
-      const fsmResult = await fsmApi.sendTransition(
-        user.value.Email,
-        "logout",
-        {
-          userId: user.value.id,
-          email: user.value.Email,
-        }
-      );
+      const fsmResult = await fsmApi.sendTransition(user.value.id, "logout", {
+        userId: user.value.id,
+        email: user.value.Email,
+      });
       console.log("FSM State:", fsmResult.state);
     } catch (err) {
       console.error("FSM logout failed:", err);

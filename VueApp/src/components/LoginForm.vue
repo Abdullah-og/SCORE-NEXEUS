@@ -110,13 +110,13 @@ async function handleLogin() {
       return;
     }
 
-    // Success
     const user = data.user;
     localStorage.setItem("currentUser", JSON.stringify(user));
     store.commit("setUser", user);
 
     try {
-      const fsmResult = await fsmApi.sendTransition(user.Email, "login", {
+      const fsmResult = await fsmApi.sendTransition(user.id, "login", {
+        id: user.id,
         email: user.Email,
       });
       localStorage.setItem("fsmState", JSON.stringify(fsmResult));

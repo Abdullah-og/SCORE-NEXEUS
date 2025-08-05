@@ -425,7 +425,7 @@ onMounted(async () => {
     router.push("/");
   } else {
     const fsmResult = await fsmApi.sendTransition(
-      user.value.Email,
+      user.value.id,
       "ScheduleMatch",
       {
         userId: user.value.id,
@@ -470,7 +470,7 @@ async function scheduleMatch() {
       alert("Match updated!");
       editingTeam1.value = null;
 
-      await fsmApi.sendTransition(user.value.Email, "Edit", {
+      await fsmApi.sendTransition(user.value.id, "Edit", {
         updatedMatch: updated,
         editedBy: user.value.Email,
       });
@@ -486,7 +486,7 @@ async function scheduleMatch() {
       matches.value.push(matchData); // returned result is empty (you’re not sending back inserted row in backend)
       alert("Match scheduled!");
 
-      await fsmApi.sendTransition(user.value.Email, "ScheduleMatch", {
+      await fsmApi.sendTransition(user.value.id, "ScheduleMatch", {
         createdMatch: created,
         scheduledBy: user.value.Email,
       });
@@ -508,7 +508,7 @@ function editMatch(match) {
   Venue.value = match.Venue;
 
   fsmApi
-    .sendTransition(user.value.Email, "Edit", {
+    .sendTransition(user.value.id, "Edit", {
       matchId: match.Team1,
       editedBy: user.value.Email,
     })
@@ -528,7 +528,7 @@ async function deleteMatch(Team1Key) {
     if (!res.ok) throw new Error("Delete failed");
     matches.value = matches.value.filter((m) => m.Team1 !== Team1Key);
 
-    const fsmResult = await fsmApi.sendTransition(user.value.Email, "Delete", {
+    const fsmResult = await fsmApi.sendTransition(user.value.id, "Delete", {
       deletedMatchId: Team1Key,
       deletedBy: user.value.Email,
     });
@@ -563,14 +563,10 @@ function formatDate(dateStr) {
 async function logout() {
   if (user.value?.id) {
     try {
-      const fsmResult = await fsmApi.sendTransition(
-        user.value.Email,
-        "logout",
-        {
-          userId: user.value.id,
-          email: user.value.Email,
-        }
-      );
+      const fsmResult = await fsmApi.sendTransition(user.value.id, "logout", {
+        userId: user.value.id,
+        email: user.value.Email,
+      });
       console.log("FSM State:", fsmResult.state);
     } catch (err) {
       console.error("FSM logout failed:", err);

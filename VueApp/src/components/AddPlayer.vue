@@ -240,14 +240,10 @@ onMounted(async () => {
     alert("You must log in first!");
     router.push("/");
   } else {
-    const fsmResult = await fsmApi.sendTransition(
-      user.value.Email,
-      "AddPlayers",
-      {
-        playerName: name.value,
-        addedBy: user.value.Email,
-      }
-    );
+    const fsmResult = await fsmApi.sendTransition(user.value.id, "AddPlayers", {
+      playerName: name.value,
+      addedBy: user.value.Email,
+    });
     console.log("FSM State:", fsmResult.state);
   }
 });
@@ -274,14 +270,10 @@ async function addPlayer() {
 
     if (!response.ok) throw new Error("Failed to add player");
 
-    const fsmResult = await fsmApi.sendTransition(
-      user.value.Email,
-      "AddPlayers",
-      {
-        playerName: name.value,
-        addedBy: user.value.Email,
-      }
-    );
+    const fsmResult = await fsmApi.sendTransition(user.value.id, "AddPlayers", {
+      playerName: name.value,
+      addedBy: user.value.Email,
+    });
 
     console.log("FSM State :", fsmResult.state);
 
@@ -303,14 +295,10 @@ async function addPlayer() {
 async function logout() {
   if (user.value?.id) {
     try {
-      const fsmResult = await fsmApi.sendTransition(
-        user.value.Email,
-        "logout",
-        {
-          userId: user.value.id,
-          email: user.value.Email,
-        }
-      );
+      const fsmResult = await fsmApi.sendTransition(user.value.id, "logout", {
+        userId: user.value.id,
+        email: user.value.Email,
+      });
       console.log("FSM State:", fsmResult.state);
     } catch (err) {
       console.error("FSM logout failed:", err);

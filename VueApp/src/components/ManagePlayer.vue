@@ -395,7 +395,7 @@ onMounted(async () => {
     router.push("/");
   } else {
     const fsmResult = await fsmApi.sendTransition(
-      user.value.Email,
+      user.value.id,
       "ManagePlayer",
       {
         userId: user.value.id,
@@ -450,7 +450,7 @@ async function editPlayer(player) {
   showEditModal.value = true;
 
   try {
-    const fsmResult = await fsmApi.sendTransition(user.value.Email, "Edit", {
+    const fsmResult = await fsmApi.sendTransition(user.value.id, "Edit", {
       playerName: player.playerName,
       editor: user.value.Email,
     });
@@ -471,7 +471,7 @@ async function updatePlayer() {
     await refreshPlayers();
 
     const fsmResult = await fsmApi.sendTransition(
-      user.value.Email,
+      user.value.id,
       "Savechanges",
       {
         updatedPlayerName: editingPlayer.value.playerName,
@@ -489,7 +489,7 @@ async function cancelEdit() {
   showEditModal.value = false;
 
   try {
-    const fsmResult = await fsmApi.sendTransition(user.value.Email, "Cancel", {
+    const fsmResult = await fsmApi.sendTransition(user.value.id, "Cancel", {
       cancelledBy: user.value.Email,
     });
     console.log("FSM State (after Cancel):", fsmResult.state);
@@ -505,7 +505,7 @@ async function deletePlayer(playerName) {
       alert("Player deleted successfully!");
       await refreshPlayers();
 
-      await fsmApi.sendTransition(user.value.Email, "Delete", {
+      await fsmApi.sendTransition(user.value.id, "Delete", {
         deletedPlayerName: playerName,
         deletedBy: user.value.Email,
       });
@@ -519,14 +519,10 @@ async function deletePlayer(playerName) {
 async function logout() {
   if (user.value?.id) {
     try {
-      const fsmResult = await fsmApi.sendTransition(
-        user.value.Email,
-        "logout",
-        {
-          userId: user.value.id,
-          email: user.value.Email,
-        }
-      );
+      const fsmResult = await fsmApi.sendTransition(user.value.id, "logout", {
+        userId: user.value.id,
+        email: user.value.Email,
+      });
       console.log("FSM State:", fsmResult.state);
     } catch (err) {
       console.error("FSM logout failed:", err);

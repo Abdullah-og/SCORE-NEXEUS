@@ -33,7 +33,6 @@
     </p>
   </form>
 </template>
-
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
@@ -118,23 +117,24 @@ async function handleSignup() {
       return;
     }
 
-    store.commit("setUser", { Email: data.user.Email });
+    const user = data.user;
+    store.commit("setUser", { id: user.id, Email: user.Email });
     localStorage.setItem(
       "currentUser",
-      JSON.stringify({ Email: data.user.Email })
+      JSON.stringify({ id: user.id, Email: user.Email })
     );
 
-    // Optional FSM transition if used
     try {
-      const fsmResult = await fsmApi.sendTransition(data.user.Email, "signup", {
-        email: data.user.Email,
+      const fsmResult = await fsmApi.sendTransition(user.id, "signup", {
+        id: user.id,
+        email: user.Email,
       });
       localStorage.setItem("fsmState", JSON.stringify(fsmResult));
     } catch (fsmError) {
       console.warn("FSM Error (optional):", fsmError);
     }
 
-    router.push("/");
+    router.push("/"); // Redirect to login or dashboard
   } catch (error) {
     console.error("Signup error:", error);
     errorMessage.value = "Server error. Please try again.";
