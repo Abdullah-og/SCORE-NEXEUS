@@ -117,7 +117,11 @@ const fetchMachine = createMachine({
         Cancel:{
           target:'MANAGEPLAYER',
           actions:['UpdationCancel']
-        }
+        },
+        Edit:{
+          target:'EDITPLAYER',
+          actions:['EditName']
+        },
       }
     },
     

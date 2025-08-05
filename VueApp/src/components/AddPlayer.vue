@@ -279,7 +279,6 @@ async function addPlayer() {
 
     successMessage.value = `${name.value} added successfully!`;
 
-    // Reset form
     name.value = "";
     role.value = "";
     team.value = "";

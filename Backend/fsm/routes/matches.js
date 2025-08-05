@@ -12,22 +12,32 @@ router.get("/", (req, res) => {
 
 
 router.post("/", (req, res) => {
-  const { Team1, Team2, Date, Time, Venue } = req.body;
+  const { Team1, Team2, Date, Time, Venue, user_id } = req.body;
 
-  const query = `INSERT INTO matches (Team1, Team2, Date, Time, Venue) VALUES (?, ?, ?, ?, ?)`;
-  db.query(query, [Team1, Team2, Date, Time, Venue], (err) => {
+  const query = `
+    INSERT INTO matches (Team1, Team2, Date, Time, Venue, user_id)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+  db.query(query, [Team1, Team2, Date, Time, Venue, user_id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ message: "Match added successfully", match: req.body });
+    res.status(201).json({
+      message: "Match added successfully",
+      matchId: result.insertId,
+      match: req.body
+    });
   });
 });
 
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { Team1, Team2, Date, Time, Venue } = req.body;
 
-router.put("/:Team1", (req, res) => {
-  const { Team1 } = req.params;
-  const { Team2, Date, Time, Venue } = req.body;
-
-  const query = `UPDATE matches SET Team2 = ?, Date = ?, Time = ?, Venue = ? WHERE Team1 = ?`;
-  db.query(query, [Team2, Date, Time, Venue, Team1], (err, result) => {
+  const query = `
+    UPDATE matches 
+    SET Team1 = ?, Team2 = ?, Date = ?, Time = ?, Venue = ?
+    WHERE id = ?
+  `;
+  db.query(query, [Team1, Team2, Date, Time, Venue, id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     if (result.affectedRows === 0)
       return res.status(404).json({ error: "Match not found" });
@@ -37,9 +47,9 @@ router.put("/:Team1", (req, res) => {
 });
 
 
-router.delete("/:Team1", (req, res) => {
-  const { Team1 } = req.params;
-  db.query("DELETE FROM matches WHERE Team1 = ?", [Team1], (err, result) => {
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  db.query("DELETE FROM matches WHERE id = ?", [id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     if (result.affectedRows === 0)
       return res.status(404).json({ error: "Match not found" });

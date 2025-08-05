@@ -270,10 +270,7 @@
                 </svg>
                 Edit
               </button>
-              <button
-                @click="deletePlayer(player.playerName)"
-                class="delete-btn"
-              >
+              <button @click="deletePlayer(player.id)" class="delete-btn">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -381,6 +378,7 @@ const searchQuery = ref("");
 const showEditModal = ref(false);
 
 const editingPlayer = ref({
+  id: null,
   playerName: "",
   playerRole: "",
   Team: "",
@@ -463,7 +461,7 @@ async function editPlayer(player) {
 async function updatePlayer() {
   try {
     await axios.put(
-      `${API_URL}/${editingPlayer.value.playerName}`,
+      `${API_URL}/${editingPlayer.value.id}`,
       editingPlayer.value
     );
     alert("Player updated successfully!");
@@ -498,15 +496,15 @@ async function cancelEdit() {
   }
 }
 
-async function deletePlayer(playerName) {
+async function deletePlayer(id) {
   if (confirm("Are you sure you want to delete this player?")) {
     try {
-      await axios.delete(`${API_URL}/${playerName}`);
+      await axios.delete(`${API_URL}/${id}`);
       alert("Player deleted successfully!");
       await refreshPlayers();
 
       await fsmApi.sendTransition(user.value.id, "Delete", {
-        deletedPlayerName: playerName,
+        deletedPlayerName: id,
         deletedBy: user.value.Email,
       });
     } catch (err) {
@@ -533,7 +531,6 @@ async function logout() {
   router.push("/");
 }
 </script>
->
 
 <style scoped>
 .dashboard-layout {

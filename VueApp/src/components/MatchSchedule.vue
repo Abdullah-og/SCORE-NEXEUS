@@ -360,7 +360,7 @@
                 </button>
                 <button
                   class="action-btn delete"
-                  @click="deleteMatch(match.Team1)"
+                  @click="deleteMatch(match.id)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -417,7 +417,7 @@ const Team2 = ref("");
 const DateVal = ref("");
 const Time = ref("");
 const Venue = ref("");
-const editingTeam1 = ref(null);
+const editingMatchId = ref(null);
 
 onMounted(async () => {
   if (!user.value) {
@@ -446,12 +446,13 @@ async function scheduleMatch() {
     Date: DateVal.value,
     Time: Time.value,
     Venue: Venue.value,
+    user_id: user.value.id,
   };
 
   try {
-    if (editingTeam1.value) {
+    if (editingMatchId.value !== null) {
       const res = await fetch(
-        `http://localhost:4000/matches/${editingTeam1.value}`,
+        `http://localhost:4000/matches/${editingMatchId.value}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -460,18 +461,18 @@ async function scheduleMatch() {
       );
 
       if (!res.ok) throw new Error("Update failed");
-      const updated = await res.json();
 
       const index = matches.value.findIndex(
-        (m) => m.Team1 === editingTeam1.value
+        (m) => m.id === editingMatchId.value
       );
-      if (index !== -1) matches.value[index] = updated;
+      if (index !== -1)
+        matches.value[index] = { id: editingMatchId.value, ...matchData };
 
       alert("Match updated!");
-      editingTeam1.value = null;
+      editingMatchId.value = null;
 
       await fsmApi.sendTransition(user.value.id, "Edit", {
-        updatedMatch: updated,
+        updatedMatch: matchData,
         editedBy: user.value.Email,
       });
     } else {
@@ -483,7 +484,7 @@ async function scheduleMatch() {
 
       if (!res.ok) throw new Error("Creation failed");
       const created = await res.json();
-      matches.value.push(matchData); // returned result is empty (you’re not sending back inserted row in backend)
+      matches.value.push({ id: created.matchId, ...matchData });
       alert("Match scheduled!");
 
       await fsmApi.sendTransition(user.value.id, "ScheduleMatch", {
@@ -500,7 +501,7 @@ async function scheduleMatch() {
 }
 
 function editMatch(match) {
-  editingTeam1.value = match.Team1;
+  editingMatchId.value = match.id;
   Team1.value = match.Team1;
   Team2.value = match.Team2;
   DateVal.value = match.Date;
@@ -509,7 +510,7 @@ function editMatch(match) {
 
   fsmApi
     .sendTransition(user.value.id, "Edit", {
-      matchId: match.Team1,
+      matchId: match.id,
       editedBy: user.value.Email,
     })
     .then((fsmResult) => {
@@ -517,19 +518,19 @@ function editMatch(match) {
     });
 }
 
-async function deleteMatch(Team1Key) {
+async function deleteMatch(id) {
   if (!confirm("Are you sure you want to delete this match?")) return;
 
   try {
-    const res = await fetch(`http://localhost:4000/matches/${Team1Key}`, {
+    const res = await fetch(`http://localhost:4000/matches/${id}`, {
       method: "DELETE",
     });
 
     if (!res.ok) throw new Error("Delete failed");
-    matches.value = matches.value.filter((m) => m.Team1 !== Team1Key);
+    matches.value = matches.value.filter((m) => m.id !== id);
 
     const fsmResult = await fsmApi.sendTransition(user.value.id, "Delete", {
-      deletedMatchId: Team1Key,
+      deletedMatchId: id,
       deletedBy: user.value.Email,
     });
     console.log("FSM State:", fsmResult.state);
