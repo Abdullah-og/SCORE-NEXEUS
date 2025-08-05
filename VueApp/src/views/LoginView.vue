@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="background-grid">
-      <div v-for="i in 13" :key="i" class="grid-item">
+      <div v-for="i in 17" :key="i" class="grid-item">
         <img :src="getImagePath(i)" :alt="`Background image ${i}`" />
       </div>
     </div>
