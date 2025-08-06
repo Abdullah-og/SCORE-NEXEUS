@@ -748,7 +748,6 @@ async function logout() {
   border: 1px solid #e57373;
 }
 
-/* Main Content */
 .main-content {
   flex: 1;
   padding: 2rem;
