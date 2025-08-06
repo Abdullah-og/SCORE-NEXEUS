@@ -144,6 +144,18 @@
         {{ updateMessage }}
       </div>
 
+      <div v-if="showConfirmModal" class="modal-overlay">
+        <div class="modal-box">
+          <p>Are you sure you want to delete this player?</p>
+          <div class="modal-actions">
+            <button @click="performDelete" class="confirm-btn">Yes</button>
+            <button @click="showConfirmModal = false" class="cancel-btn">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="dashboard-header">
         <div class="header-left">
           <h1>Manage Players</h1>
@@ -274,7 +286,7 @@
                 </svg>
                 Edit
               </button>
-              <button @click="deletePlayer(player.id)" class="delete-btn">
+              <button @click="confirmDelete(player.id)" class="delete-btn">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -371,6 +383,8 @@ const store = useStore();
 const router = useRouter();
 const updateMessage = ref("");
 const updateMessageType = ref("");
+const showConfirmModal = ref(false);
+const playerToDelete = ref(null);
 
 const API_URL = "http://localhost:4000/players";
 
@@ -506,26 +520,32 @@ async function cancelEdit() {
   }
 }
 
-async function deletePlayer(id) {
-  if (confirm("Are you sure you want to delete this player?")) {
-    try {
-      await axios.delete(`${API_URL}/${id}`);
-      updateMessage.value = "Player deleted successfully!";
-      updateMessageType.value = "success";
+function confirmDelete(id) {
+  playerToDelete.value = id;
+  showConfirmModal.value = true;
+}
 
-      await refreshPlayers();
+async function performDelete() {
+  try {
+    await axios.delete(`${API_URL}/${playerToDelete.value}`);
+    updateMessage.value = "Player deleted successfully!";
+    updateMessageType.value = "success";
 
-      await fsmApi.sendTransition(user.value.id, "Delete", {
-        deletedPlayerName: id,
-        deletedBy: user.value.Email,
-      });
-    } catch (err) {
-      console.error("Delete failed:", err);
-      updateMessage.value = "Failed to delete player!";
-      updateMessageType.value = "error";
-    }
+    await refreshPlayers();
 
-    // Auto-clear message after 3 seconds
+    await fsmApi.sendTransition(user.value.id, "Delete", {
+      deletedPlayerName: playerToDelete.value,
+      deletedBy: user.value.Email,
+    });
+  } catch (err) {
+    console.error("Delete failed:", err);
+    updateMessage.value = "Failed to delete player!";
+    updateMessageType.value = "error";
+  } finally {
+    showConfirmModal.value = false;
+    playerToDelete.value = null;
+
+    // Auto-clear message
     setTimeout(() => {
       updateMessage.value = "";
     }, 3000);
@@ -981,7 +1001,7 @@ async function logout() {
 
 .form-group input,
 .form-group select {
-  width: 100%;
+  width: 95%;
   padding: 0.8rem;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -1052,6 +1072,49 @@ async function logout() {
   border: 1px solid #ef9a9a;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.confirm-btn {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.cancel-btn {
+  background-color: #aaa;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
 /* Responsive Design */
 @media (max-width: 992px) {
   .sidebar {
@@ -1117,4 +1180,4 @@ async function logout() {
   }
 }
 </style>
-alert
+delete

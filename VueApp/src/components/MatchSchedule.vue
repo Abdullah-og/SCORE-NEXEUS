@@ -144,6 +144,22 @@
         {{ updateMessage }}
       </div>
 
+      <div v-if="showMatchConfirmModal" class="modal-overlay">
+        <div class="modal-box">
+          <p>Are you sure you want to delete this match?</p>
+          <div class="modal-actions">
+            <button class="confirm-btn" @click="performMatchDelete">Yes</button>
+            <button class="cancel-btn" @click="showMatchConfirmModal = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="deleteErrorMessage" class="error-message">
+        {{ deleteErrorMessage }}
+      </div>
+
       <div class="dashboard-header">
         <div class="header-left">
           <h1>Match Scheduler</h1>
@@ -364,7 +380,7 @@
                 </button>
                 <button
                   class="action-btn delete"
-                  @click="deleteMatch(match.id)"
+                  @click="confirmMatchDelete(match.id)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -402,10 +418,13 @@ const store = useStore();
 const router = useRouter();
 const updateMessage = ref("");
 const updateMessageType = ref("");
+const showMatchConfirmModal = ref(false);
+const matchToDelete = ref(null);
+const deleteErrorMessage = ref("");
 
 const user = computed(() => store.state.currentUser);
 const userInitial = computed(
-  () => user.value?.email?.charAt(0).toUpperCase() || "U"
+  () => user.value?.Email?.charAt(0).toUpperCase() || "U"
 );
 
 const currentDate = ref(
@@ -503,7 +522,6 @@ async function scheduleMatch() {
       });
     }
 
-    // Clear input fields
     Team1.value = Team2.value = DateVal.value = Time.value = Venue.value = "";
   } catch (err) {
     updateMessage.value = "Something went wrong. Please try again.";
@@ -535,25 +553,42 @@ function editMatch(match) {
     });
 }
 
-async function deleteMatch(id) {
-  if (!confirm("Are you sure you want to delete this match?")) return;
+function confirmMatchDelete(id) {
+  matchToDelete.value = id;
+  showMatchConfirmModal.value = true;
+}
 
+async function performMatchDelete() {
   try {
-    const res = await fetch(`http://localhost:4000/matches/${id}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `http://localhost:4000/matches/${matchToDelete.value}`,
+      {
+        method: "DELETE",
+      }
+    );
 
     if (!res.ok) throw new Error("Delete failed");
-    matches.value = matches.value.filter((m) => m.id !== id);
+
+    matches.value = matches.value.filter((m) => m.id !== matchToDelete.value);
 
     const fsmResult = await fsmApi.sendTransition(user.value.id, "Delete", {
-      deletedMatchId: id,
+      deletedMatchId: matchToDelete.value,
       deletedBy: user.value.Email,
     });
+
     console.log("FSM State:", fsmResult.state);
+    deleteErrorMessage.value = ""; // Clear error if success
   } catch (err) {
     console.error("Failed to delete match", err);
-    alert("Error deleting match.");
+    deleteErrorMessage.value = "Failed to delete match.";
+  } finally {
+    showMatchConfirmModal.value = false;
+    matchToDelete.value = null;
+
+    // Optional: auto-clear error after 3s
+    setTimeout(() => {
+      deleteErrorMessage.value = "";
+    }, 3000);
   }
 }
 
@@ -1002,6 +1037,56 @@ async function logout() {
 .empty-state p {
   margin: 0.3rem 0;
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 300px;
+  width: 90%;
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirm-btn {
+  background-color: #d32f2f;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+}
+
+.cancel-btn {
+  background-color: gray;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 1rem;
+}
+
 @media (max-width: 992px) {
   .sidebar {
     width: 220px;
@@ -1040,4 +1125,3 @@ async function logout() {
   }
 }
 </style>
-alert
