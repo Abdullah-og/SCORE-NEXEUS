@@ -53,7 +53,6 @@ app.use((req, res, next) => {
 });
 
 
-
 app.post('/fsm/machine', (req, res) => {
   console.log("Incoming FSM payload:", req.body);
 
@@ -83,40 +82,31 @@ app.post('/fsm/machine', (req, res) => {
       return res.status(400).json({ code: "FSM-03", errorMessage: "Missing transition event" });
     }
 
-
-    db.query('SELECT NOW() AS currentTime', (dbErr, results) => {
-      if (dbErr) {
-        logger.error(`Database query error: ${dbErr.message}`);
-        return res.status(500).json({ error: "Database query failed" });
-      }
-      logger.info(`Database query result: ${JSON.stringify(results)}`);
-
-      if (service.state.nextEvents.includes(transition)) {
-        service.send({
-          ...jsonObj,
-          type: transition,
-        });
-        return res.json({
-          state: service.state.value,
-          context: service.state.context,
-          nextEvents: service.state.nextEvents,
-          dbTime: results[0].currentTime,
-        });
-      } else {
-        return res.status(400).json({
-          code: "FSM-01",
-          errorMessage: "Invalid transition event for current state",
-          currentState: service.state.value,
-          nextEvents: service.state.nextEvents,
-          context: service.state.context,
-        });
-      }
-    });
+    if (service.state.nextEvents.includes(transition)) {
+      service.send({
+        ...jsonObj,
+        type: transition,
+      });
+      return res.json({
+        state: service.state.value,
+        context: service.state.context,
+        nextEvents: service.state.nextEvents
+      });
+    } else {
+      return res.status(400).json({
+        code: "FSM-01",
+        errorMessage: "Invalid transition event for current state",
+        currentState: service.state.value,
+        nextEvents: service.state.nextEvents,
+        context: service.state.context,
+      });
+    }
   } catch (error) {
     logger.error(`Error processing request: ${error.message}`);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
