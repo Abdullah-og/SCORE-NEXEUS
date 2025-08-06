@@ -140,6 +140,10 @@
     </aside>
 
     <main class="main-content">
+      <div v-if="updateMessage" :class="['message-box', updateMessageType]">
+        {{ updateMessage }}
+      </div>
+
       <div class="dashboard-header">
         <div class="header-left">
           <h1>Manage Players</h1>
@@ -365,6 +369,8 @@ import { fsmApi } from "@/api.js";
 
 const store = useStore();
 const router = useRouter();
+const updateMessage = ref("");
+const updateMessageType = ref("");
 
 const API_URL = "http://localhost:4000/players";
 
@@ -464,7 +470,7 @@ async function updatePlayer() {
       `${API_URL}/${editingPlayer.value.id}`,
       editingPlayer.value
     );
-    alert("Player updated successfully!");
+
     showEditModal.value = false;
     await refreshPlayers();
 
@@ -477,9 +483,13 @@ async function updatePlayer() {
       }
     );
     console.log("FSM State (after Save Changes):", fsmResult.state);
+
+    updateMessage.value = "Player updated successfully!";
+    updateMessageType.value = "success";
   } catch (err) {
     console.error("Update failed:", err);
-    alert("Failed to update player!");
+    updateMessage.value = "Failed to update player!";
+    updateMessageType.value = "error";
   }
 }
 
@@ -1013,6 +1023,26 @@ async function logout() {
 
 .save-btn:hover {
   background: #3e8e41;
+}
+
+.message-box {
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.message-box.success {
+  background-color: #e6ffed;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+.message-box.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
 }
 
 /* Responsive Design */

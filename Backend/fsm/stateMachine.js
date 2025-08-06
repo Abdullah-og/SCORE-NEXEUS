@@ -47,6 +47,10 @@ const fetchMachine = createMachine({
           target:'SCHEDULEMATCH',
           actions:['ScheduleMatch']
         },
+        about:{
+          target:'ABOUT',
+          actions:[]
+        },
         logout:{
           target:'LOGIN',
           actions:['Logout']
@@ -71,10 +75,14 @@ const fetchMachine = createMachine({
           target:'SCHEDULEMATCH',
           actions:['MatchInfo']
         },
+        about:{
+          target:'ABOUT',
+          actions:[]
+        },
         logout:{
           target:'LOGIN',
           actions:['Logout']
-        }
+        },
       }
     },
     MANAGEPLAYER:{
@@ -106,7 +114,11 @@ const fetchMachine = createMachine({
         logout:{
           target:'LOGIN',
           actions:['Logout']
-        }
+        },
+        about:{
+          target:'ABOUT',
+          actions:[]
+        },
       }
     },
     EDITPLAYER:{
@@ -155,8 +167,38 @@ const fetchMachine = createMachine({
         logout:{
           target:'LOGIN',
           actions:['Logout']
-        }
+        },
+        about:{
+          target:'ABOUT',
+          actions:[]
+        },
       }
+    },
+    ABOUT:{
+      on:{
+        AddPlayers:{
+          target:'ADDPLAYER',
+          actions:['PlayerAddition']
+        },
+        ManagePlayer:{
+          target:'MANAGEPLAYER',
+          actions:['ManagePlayer']       
+        },
+        ScheduleMatch:{
+          target:'SCHEDULEMATCH',
+          actions:['ScheduleMatch']
+        }, 
+        about:{
+          target:'ABOUT',
+          actions:[]
+        },
+        logout:{
+          target:'LOGIN',
+          actions:['Logout']
+        }
+
+      }
+      
     }
   },
   actions:{

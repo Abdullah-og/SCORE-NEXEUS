@@ -140,6 +140,10 @@
     </aside>
 
     <main class="main-content">
+      <div v-if="updateMessage" :class="['message-box', updateMessageType]">
+        {{ updateMessage }}
+      </div>
+
       <div class="dashboard-header">
         <div class="header-left">
           <h1>Match Scheduler</h1>
@@ -396,6 +400,8 @@ import { fsmApi } from "@/api.js";
 
 const store = useStore();
 const router = useRouter();
+const updateMessage = ref("");
+const updateMessageType = ref("");
 
 const user = computed(() => store.state.currentUser);
 const userInitial = computed(
@@ -468,7 +474,8 @@ async function scheduleMatch() {
       if (index !== -1)
         matches.value[index] = { id: editingMatchId.value, ...matchData };
 
-      alert("Match updated!");
+      updateMessage.value = "Match updated successfully!";
+      updateMessageType.value = "success";
       editingMatchId.value = null;
 
       await fsmApi.sendTransition(user.value.id, "Edit", {
@@ -483,9 +490,12 @@ async function scheduleMatch() {
       });
 
       if (!res.ok) throw new Error("Creation failed");
+
       const created = await res.json();
       matches.value.push({ id: created.matchId, ...matchData });
-      alert("Match scheduled!");
+
+      updateMessage.value = "Match scheduled successfully!";
+      updateMessageType.value = "success";
 
       await fsmApi.sendTransition(user.value.id, "ScheduleMatch", {
         createdMatch: created,
@@ -493,10 +503,17 @@ async function scheduleMatch() {
       });
     }
 
+    // Clear input fields
     Team1.value = Team2.value = DateVal.value = Time.value = Venue.value = "";
   } catch (err) {
-    alert("Something went wrong.");
+    updateMessage.value = "Something went wrong. Please try again.";
+    updateMessageType.value = "error";
     console.error(err);
+  } finally {
+    setTimeout(() => {
+      updateMessage.value = "";
+      updateMessageType.value = "";
+    }, 3000);
   }
 }
 
@@ -708,6 +725,27 @@ async function logout() {
 
 .logout-btn:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.message-box {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.success {
+  background-color: #e0f7e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+.error {
+  background-color: #fdecea;
+  color: #c62828;
+  border: 1px solid #e57373;
 }
 
 /* Main Content */
@@ -1003,3 +1041,4 @@ async function logout() {
   }
 }
 </style>
+alert
