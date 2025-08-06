@@ -510,7 +510,9 @@ async function deletePlayer(id) {
   if (confirm("Are you sure you want to delete this player?")) {
     try {
       await axios.delete(`${API_URL}/${id}`);
-      alert("Player deleted successfully!");
+      updateMessage.value = "Player deleted successfully!";
+      updateMessageType.value = "success";
+
       await refreshPlayers();
 
       await fsmApi.sendTransition(user.value.id, "Delete", {
@@ -519,8 +521,14 @@ async function deletePlayer(id) {
       });
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete player!");
+      updateMessage.value = "Failed to delete player!";
+      updateMessageType.value = "error";
     }
+
+    // Auto-clear message after 3 seconds
+    setTimeout(() => {
+      updateMessage.value = "";
+    }, 3000);
   }
 }
 
@@ -914,7 +922,6 @@ async function logout() {
   background: rgba(244, 67, 54, 0.2);
 }
 
-/* Edit Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1110,3 +1117,4 @@ async function logout() {
   }
 }
 </style>
+alert
