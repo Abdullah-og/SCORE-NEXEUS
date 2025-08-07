@@ -19,8 +19,6 @@ app.use("/users", userRoutes);
 app.use("/players", playerRoutes);
 app.use("/matches", matchRoutes);
 
-
-
 const logger = log("server.js");
 
 const keys = {};
