@@ -49,13 +49,24 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  db.query("DELETE FROM matches WHERE id = ?", [id], (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (result.affectedRows === 0)
-      return res.status(404).json({ error: "Match not found" });
 
-    res.json({ message: "Match deleted successfully" });
+  db.query("DELETE FROM matches WHERE id = ?", [id], (err, result) => {
+    if (err) return res.sendStatus(500);
+    if (result.affectedRows === 0) return res.sendStatus(404);
+
+    db.query("SELECT COUNT(*) AS count FROM matches", (err2, results) => {
+      if (err2) return res.sendStatus(500);
+
+      if (results[0].count === 0) {
+        db.query("ALTER TABLE matches AUTO_INCREMENT = 1", () => {
+          return res.sendStatus(200);
+        });
+      } else {
+        res.sendStatus(200);
+      }
+    });
   });
 });
+
 
 module.exports = router;

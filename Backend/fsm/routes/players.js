@@ -64,15 +64,26 @@ router.put("/:id", (req, res) => {
   });
 });
 
-
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  const query = `DELETE FROM players WHERE id = ?`;
 
-  db.query(query, [id], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ message: "Player deleted" });
+  db.query("DELETE FROM players WHERE id = ?", [id], (err, result) => {
+    if (err) return res.sendStatus(500);
+    if (result.affectedRows === 0) return res.sendStatus(404);
+
+    db.query("SELECT COUNT(*) AS count FROM players", (err2, results) => {
+      if (err2) return res.sendStatus(500);
+
+      if (results[0].count === 0) {
+        db.query("ALTER TABLE players AUTO_INCREMENT = 1", () => {
+          return res.sendStatus(200);
+        });
+      } else {
+        res.sendStatus(200);
+      }
+    });
   });
 });
+
 
 module.exports = router;
